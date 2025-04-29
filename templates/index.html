@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>First 150 Pokémon</title>
+    <!-- Link to your CSS stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>First 150 Pokémon</h1>
+      <div class="card-container">
+        <!-- Loop through each Pokémon and wrap each card in a link -->
+        {% for pokemon in pokemons %}
+        <a href="{{ url_for('pokemon_detail', id=pokemon.id) }}" class="card-link">
+          <div class="card">
+            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" />
+            <div class="card-body">
+              <h5 class="card-title">{{ pokemon.name }}</h5>
+              <p class="card-text">ID: {{ pokemon.id }}</p>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>
