@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>First 150 Pokémon</title>
-    <!-- Link to your CSS stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>First 150 Pokémon</h1>
-      <div class="card-container">
-        <!-- Loop through each Pokémon and wrap each card in a link -->
-        {% for pokemon in pokemons %}
-        <a href="{{ url_for('pokemon_detail', id=pokemon.id) }}" class="card-link">
-          <div class="card">
-            <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" />
-            <div class="card-body">
-              <h5 class="card-title">{{ pokemon.name }}</h5>
-              <p class="card-text">ID: {{ pokemon.id }}</p>
-            </div>
-          </div>
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Periodic Table API</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Periodic Table API</h1>
+        <p>This API provides data on chemical elements.</p>
+    </header>
+    <main>
+        <section>
+            <h2>Available Endpoints</h2>
+            <ul>
+                <li><code>/api/elements</code> – All elements</li>
+                <li><code>/api/element/&lt;atomic_number&gt;</code></li>
+                <li><code>/api/element/name/&lt;name&gt;</code></li>
+                <li><code>/api/element/symbol/&lt;symbol&gt;</code></li>
+            </ul>
+        </section>
+        <section>
+            <h2>Explore Elements</h2>
+            <a href="/elements">View Element Cards</a>
+        </section>
+    </main>
+</body>
 </html>

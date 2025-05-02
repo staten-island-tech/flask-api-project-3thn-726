@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Periodic Table</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Periodic Table Elements</h1>
+    </header>
+
+    <main id="elements-container">
+        {% for element in elements %}
+        <div class="card">
+            <h2>{{ element.symbol }} - {{ element.name }}</h2>
+            <p><strong>Atomic Number:</strong> {{ element.atomicNumber }}</p>
+            <p><strong>Atomic Mass:</strong> {{ element.atomicMass }}</p>
+            <p><strong>Group Block:</strong> {{ element.groupBlock }}</p>
+            <p><strong>Bonding Type:</strong> {{ element.bondingType }}</p>
+            <p><strong>State:</strong> {{ element.standardState }}</p>
+        </div>
+        {% endfor %}
+    </main>
+</body>
+</html>
