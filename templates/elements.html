@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Periodic Table</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
-        <h1>Periodic Table Elements</h1>
+        <h1>Periodic Table of Elements</h1>
+        <p>Click an element to view more details</p>
     </header>
 
-    <main id="elements-container">
+    <main>
         {% for element in elements %}
-        <div class="card">
-            <h2>{{ element.symbol }} - {{ element.name }}</h2>
-            <p><strong>Atomic Number:</strong> {{ element.atomicNumber }}</p>
-            <p><strong>Atomic Mass:</strong> {{ element.atomicMass }}</p>
-            <p><strong>Group Block:</strong> {{ element.groupBlock }}</p>
-            <p><strong>Bonding Type:</strong> {{ element.bondingType }}</p>
-            <p><strong>State:</strong> {{ element.standardState }}</p>
-        </div>
+        <a class="card" href="/element/{{ element.atomicNumber }}">
+            <h4>{{ element.name }}</h4>
+        </a>
         {% endfor %}
     </main>
 </body>

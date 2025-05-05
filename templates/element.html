@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ element.name }} - Element Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>{{ element.name }} ({{ element.symbol }})</h1>
+    </header>
+
+    <main class="detail-container">
+        <p><strong>Atomic Number:</strong> {{ element.atomicNumber }}</p>
+        <p><strong>Atomic Mass:</strong> {{ element.atomicMass }}</p>
+        <p><strong>Group Block:</strong> {{ element.groupBlock }}</p>
+        <p><strong>Bonding Type:</strong> {{ element.bondingType or 'N/A' }}</p>
+        <p><strong>Standard State:</strong> {{ element.standardState or 'Unknown' }}</p>
+        <p><strong>Year Discovered:</strong> {{ element.yearDiscovered or 'Unknown' }}</p>
+        <a class="back-link" href="{{ url_for('index') }}">← Back to all elements</a>
+    </main>
+</body>
+</html>
