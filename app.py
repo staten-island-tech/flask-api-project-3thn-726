@@ -22,7 +22,7 @@ def element_detail(atomic_number):
     if element:
         return render_template('element.html', element=element)
     else:
-        abort(404, description="Element not found")
+        abort(404, description="Element  aint not found")
 
 if __name__ == '__main__':
     app.run(debug=True)
