@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ element.name }} - Element Details</title>
+    <title>{{ element.name }} – Periodic Table</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -13,11 +13,13 @@
     <main class="detail-container">
         <p><strong>Atomic Number:</strong> {{ element.atomicNumber }}</p>
         <p><strong>Atomic Mass:</strong> {{ element.atomicMass }}</p>
-        <p><strong>Group Block:</strong> {{ element.groupBlock }}</p>
-        <p><strong>Bonding Type:</strong> {{ element.bondingType or 'N/A' }}</p>
-        <p><strong>Standard State:</strong> {{ element.standardState or 'Unknown' }}</p>
-        <p><strong>Year Discovered:</strong> {{ element.yearDiscovered or 'Unknown' }}</p>
-        <a class="back-link" href="{{ url_for('index') }}">← Back to all elements</a>
+        <p><strong>Group:</strong> {{ element.groupBlock }}</p>
+        <p><strong>Standard State:</strong> {{ element.standardState }}</p>
+        <p><strong>Bonding Type:</strong> {{ element.bondingType }}</p>
+        <p><strong>Year Discovered:</strong> {{ element.yearDiscovered }}</p>
+        <p><strong>Electron Configuration:</strong> {{ element.electronicConfiguration }}</p>
+
+        <a href="{{ url_for('index') }}" class="back-link">← Back to all elements</a>
     </main>
 </body>
 </html>

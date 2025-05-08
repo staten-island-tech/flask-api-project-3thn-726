@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Search Results for "{{ query }}"</h1>
+        <a href="{{ url_for('index') }}" class="back-button">Back to all elements</a>
+    </header>
+
+    <main>
+        {% if results %}
+            {% for element in results %}
+                <a class="card" href="/element/{{ element.atomicNumber }}">
+                    <h4>{{ element.name }}</h4>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: white;">No matching elements found.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

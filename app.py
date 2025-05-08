@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort
+from flask import Flask, render_template, abort, request
 import requests
 
 app = Flask(__name__)
@@ -23,6 +23,23 @@ def element_detail(atomic_number):
         return render_template('element.html', element=element)
     else:
         abort(404, description="Element aint not found")
+
+@app.route('/search')
+def search():
+    query = request.args.get('q', '').strip().lower()
+    elements = fetch_elements()
+
+    if not query:
+        return render_template('search.html', query=query, results=[])
+
+    results = []
+    for el in elements:
+        if (query in str(el['atomicNumber']).lower() or
+            query in el['name'].lower() or
+            query in el['symbol'].lower()):
+            results.append(el)
+    
+    return render_template('search.html', query=query, results=results)
 
 if __name__ == '__main__':
     app.run(debug=True)
