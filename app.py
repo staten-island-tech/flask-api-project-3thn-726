@@ -24,6 +24,10 @@ def element_detail(atomic_number):
     else:
         abort(404, description="Element aint not found")
 
+@app.route("/testing")
+def testing():
+    return render_template('testing.html')
+
 @app.route('/search')
 def search():
     query = request.args.get('q', '').strip().lower()
