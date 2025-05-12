@@ -126,3 +126,48 @@ main {
   text-align: center;
 }
 
+/* Game Page Enhancements */
+.game-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-container form input[type="text"] {
+  padding: 0.5rem;
+  width: 70%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.game-container form button {
+  padding: 0.5rem 1rem;
+  background-color: rgb(10, 189, 243);
+  border: none;
+  color: white;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.game-container form button:hover {
+  background-color: #0aa2e6;
+}
+
+.game-message {
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.game-message.correct {
+  color: green;
+}
+
+.game-message.incorrect {
+  color: red;
+}

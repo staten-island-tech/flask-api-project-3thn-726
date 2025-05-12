@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Element Guessing Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Guess the Element!</h1>
+    </header>
+
+    <main class="game-container">
+        {% if hint %}
+            <p><strong>Hint:</strong> The atomic number is {{ hint }}.</p>
+            <form method="POST" action="/game/guess-web">
+                <input type="text" name="guess" placeholder="Enter element name or symbol" required>
+                <button type="submit">Submit Guess</button>
+            </form>
+        {% endif %}
+
+        {% if message %}
+            <p class="game-message {{ 'correct' if 'Correct' in message else 'incorrect' }}">{{ message }}</p>
+        {% endif %}
+
+        {% if not hint %}
+            <form method="GET" action="/game-web">
+                <button type="submit">Start a New Game</button>
+            </form>
+        {% endif %}
+    </main>
+</body>
+</html>

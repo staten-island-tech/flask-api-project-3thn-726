@@ -14,13 +14,15 @@
             <input type="text" name="q" placeholder="Search by name, symbol, or atomic number" required>
             <button type="submit">Search</button>
         </form>
+
+        <p><a href="{{ url_for('start_game_web') }}">🎮 Play the Element Guessing Game</a></p>
     </header>
 
     <main>
         {% for element in elements %}
             <a class="card" href="/element/{{ element.atomicNumber }}">
                 <h4>{{ element.name }}</h4>
-        </a>
+            </a>
         {% endfor %}
     </main>
 </body>
