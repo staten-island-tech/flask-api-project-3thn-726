@@ -1,85 +1,107 @@
 from flask import Flask, render_template, abort, request, redirect, url_for, session
 import requests
 import random
+import logging
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Ensure you have this for session management
+app.secret_key = 'nut_secrete_keys_trust'
 
 DATA_URL = "https://raw.githubusercontent.com/neelpatel05/periodic-table-api/refs/heads/master/data.json"
 
-# Fetch elements from the external API
-def fetch_elements():
-    response = requests.get(DATA_URL)
-    if response.status_code == 200:
-        return response.json()
-    return []
+logging.basicConfig(level=logging.INFO)
 
-# Home route showing all elements
+def fetch_elements():
+    try:
+        response = requests.get(DATA_URL, timeout=5)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error fetching elements: {e}")
+        return []
+    except ValueError as e:
+        logging.error(f"Invalid JSON received: {e}")
+        return []
+
 @app.route('/')
 def index():
     elements = fetch_elements()
     return render_template('elements.html', elements=elements)
 
-# Show details of a single element
 @app.route('/element/<int:atomic_number>')
 def element_detail(atomic_number):
     elements = fetch_elements()
-    element = next((el for el in elements if el["atomicNumber"] == atomic_number), None)
-    if element:
-        return render_template('element.html', element=element)
-    else:
-        abort(404, description="Element not found")
+    try:
+        element = next((el for el in elements if el.get("atomicNumber") == atomic_number), None)
+        if element:
+            return render_template('element.html', element=element)
+        else:
+            abort(404, description="Element not found")
+    except (TypeError, KeyError) as e:
+        logging.error(f"Error finding element: {e}")
+        abort(500)
 
-# Search route for searching elements
 @app.route('/search')
 def search():
-    query = request.args.get('q', '').strip().lower()
-    elements = fetch_elements()
+    try:
+        query = request.args.get('q', '').strip().lower()
+        elements = fetch_elements()
 
-    if not query:
-        return render_template('search.html', query=query, results=[])
+        if not query:
+            return render_template('search.html', query=query, results=[])
 
-    results = []
-    for el in elements:
-        if (query in str(el['atomicNumber']).lower() or
-            query in el['name'].lower() or
-            query in el['symbol'].lower()):
-            results.append(el)
-    
-    return render_template('search.html', query=query, results=results)
+        results = []
+        for el in elements:
+            try:
+                if (query in str(el.get('atomicNumber', '')).lower() or
+                    query in el.get('name', '').lower() or
+                    query in el.get('symbol', '').lower()):
+                    results.append(el)
+            except AttributeError as e:
+                logging.warning(f"Malformed element data: {e}")
+                continue
+        
+        return render_template('search.html', query=query, results=results)
+    except Exception as e:
+        logging.error(f"Search error: {e}")
+        abort(500)
 
-# Start the guessing game
 @app.route('/game-web')
 def start_game_web():
     elements = fetch_elements()
-    element = random.choice(elements)
-    session['element'] = {
-        'name': element['name'],
-        'symbol': element['symbol'],
-        'atomicNumber': element['atomicNumber']
-    }
-    session['attempts'] = 0
-    return render_template('game.html', hint=element['atomicNumber'])
+    try:
+        element = random.choice(elements)
+        session['element'] = {
+            'name': element.get('name', ''),
+            'symbol': element.get('symbol', ''),
+            'atomicNumber': element.get('atomicNumber', 0)
+        }
+        session['attempts'] = 0
+        return render_template('game.html', hint=element.get('atomicNumber'))
+    except (IndexError, KeyError, TypeError) as e:
+        logging.error(f"Error starting game: {e}")
+        abort(500)
 
-# Handle the guess in the game
 @app.route('/game/guess-web', methods=['POST'])
 def guess_element_web():
-    if 'element' not in session:
-        return redirect(url_for('start_game_web'))
+    try:
+        if 'element' not in session:
+            return redirect(url_for('start_game_web'))
 
-    guess = request.form.get('guess', '').strip().lower()
-    target = session['element']
-    session['attempts'] += 1
+        guess = request.form.get('guess', '').strip().lower()
+        target = session.get('element', {})
+        session['attempts'] = session.get('attempts', 0) + 1
 
-    if guess == target['name'].lower() or guess == target['symbol'].lower():
-        message = f"🎉 Correct! It was {target['name']} ({target['symbol']}). Attempts: {session['attempts']}"
-        session.pop('element', None)
-        return render_template('game.html', message=message)
-    else:
-        hint = target['atomicNumber']
-        message = "❌ Incorrect guess. Try again!"
-        return render_template('game.html', hint=hint, message=message)
+        if guess == target.get('name', '').lower() or guess == target.get('symbol', '').lower():
+            message = f"🎉 Correct! It was {target.get('name')} ({target.get('symbol')}). Attempts: {session['attempts']}"
+            session.pop('element', None)
+            return render_template('game.html', message=message)
+        else:
+            hint = target.get('atomicNumber', '?')
+            message = "❌ Incorrect guess. Try again!"
+            return render_template('game.html', hint=hint, message=message)
+    except Exception as e:
+        logging.error(f"Game guess error: {e}")
+        abort(500)
 
-# Main entry point to run the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
