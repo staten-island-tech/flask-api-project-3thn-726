@@ -35,7 +35,7 @@ def element_detail(atomic_number):
         if element:
             return render_template('element.html', element=element)
         else:
-            abort(404, description="Element not found")
+            abort(404, description="Element ain't found, sowy")
     except (TypeError, KeyError) as e:
         logging.error(f"Error finding element: {e}")
         abort(500)
