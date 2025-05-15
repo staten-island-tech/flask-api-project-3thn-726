@@ -6,6 +6,7 @@ import logging
 app = Flask(__name__)
 app.secret_key = 'nut_secrete_keys_trust'
 
+
 DATA_URL = "https://raw.githubusercontent.com/neelpatel05/periodic-table-api/refs/heads/master/data.json"
 
 logging.basicConfig(level=logging.INFO)
@@ -15,12 +16,10 @@ def fetch_elements():
         response = requests.get(DATA_URL, timeout=5)
         response.raise_for_status()
         return response.json()
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error fetching elements: {e}")
-        return []
-    except ValueError as e:
-        logging.error(f"Invalid JSON received: {e}")
-        return []
+    except requests.exceptions.RequestException:
+        return render_template('error.html')
+    except ValueError:
+        return render_template('error.html')
 
 @app.route('/')
 def index():
@@ -35,10 +34,9 @@ def element_detail(atomic_number):
         if element:
             return render_template('element.html', element=element)
         else:
-            abort(404, description="Element ain't found, sowy")
-    except (TypeError, KeyError) as e:
-        logging.error(f"Error finding element: {e}")
-        abort(500)
+            return render_template('error.html')
+    except (TypeError, KeyError):
+        return render_template('error.html')
 
 @app.route('/search')
 def search():
@@ -77,9 +75,8 @@ def start_game_web():
         }
         session['attempts'] = 0
         return render_template('game.html', hint=element.get('atomicNumber'))
-    except (IndexError, KeyError, TypeError) as e:
-        logging.error(f"Error starting game: {e}")
-        abort(500)
+    except (IndexError, KeyError, TypeError):
+        return render_template('error.html')
 
 @app.route('/game/guess-web', methods=['POST'])
 def guess_element_web():
@@ -99,9 +96,8 @@ def guess_element_web():
             hint = target.get('atomicNumber', '?')
             message = "❌ Incorrect guess. Try again!"
             return render_template('game.html', hint=hint, message=message)
-    except Exception as e:
-        logging.error(f"Game guess error: {e}")
-        abort(500)
+    except Exception:
+        return render_template('error.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
