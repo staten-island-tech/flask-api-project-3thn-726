@@ -12,12 +12,12 @@
 
     <main class="detail-container">
         <p><strong>Atomic Number:</strong> {{ element.atomicNumber }}</p>
-        <p><strong>Atomic Mass:</strong> {{ element.atomicMass }}</p>
-        <p><strong>Group:</strong> {{ element.groupBlock }}</p>
-        <p><strong>Standard State:</strong> {{ element.standardState }}</p>
-        <p><strong>Bonding Type:</strong> {{ element.bondingType }}</p>
-        <p><strong>Year Discovered:</strong> {{ element.yearDiscovered }}</p>
-        <p><strong>Electron Configuration:</strong> {{ element.electronicConfiguration }}</p>
+        <p><strong>Atomic Mass:</strong> {{ element.atomicMass | default('N/A') }}</p>
+        <p><strong>Group:</strong> {{ element.groupBlock | default('N/A') }}</p>
+        <p><strong>Standard State:</strong> {{ element.standardState | default('N/A') }}</p>
+        <p><strong>Bonding Type:</strong> {{ element.bondingType | default('N/A') }}</p>
+        <p><strong>Year Discovered:</strong> {{ element.yearDiscovered | default('N/A') }}</p>
+        <p><strong>Electron Configuration:</strong> {{ element.electronicConfiguration | default('N/A') }}</p>
 
         <a href="{{ url_for('index') }}" class="back-link">← Back to all elements</a>
     </main>
