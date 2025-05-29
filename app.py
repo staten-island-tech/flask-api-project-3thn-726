@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request
 import requests
 import random
 
 app = Flask(__name__)
-app.secret_key = 'mysecretkey'
 
 DATA_URL = "https://raw.githubusercontent.com/neelpatel05/periodic-table-api/refs/heads/master/data.json"
 
@@ -35,11 +34,7 @@ def start_game_web():
     try:
         elements = fetch_elements()
         element = random.choice(elements)
-        session['name'] = element.get('name', '')
-        session['symbol'] = element.get('symbol', '')
-        session['atomicNumber'] = element.get('atomicNumber', 0)
-        session['attempts'] = 0
-        return render_template('game.html', hint=session['atomicNumber'])
+        return render_template('game.html', hint=element['atomicNumber'], answer_name=element['name'], answer_symbol=element['symbol'])
     except:
         return render_template('error.html')
 
@@ -47,26 +42,21 @@ def start_game_web():
 def guess_element_web():
     try:
         guess = request.form.get('guess', '').strip().lower()
-        name = session.get('name', '').lower()
-        symbol = session.get('symbol', '').lower()
-        atomic_number = session.get('atomicNumber')
-        session['attempts'] += 1
+        answer_name = request.form.get('answer_name', '').strip().lower()
+        answer_symbol = request.form.get('answer_symbol', '').strip().lower()
 
-        if guess == name or guess == symbol:
-            msg = f"Correct! It was {name.title()} ({symbol.upper()}). Attempts: {session['attempts']}"
-            session.clear()
+        if guess == answer_name or guess == answer_symbol:
+            msg = f"Correct! It was {answer_name.title()} ({answer_symbol.upper()})."
             return render_template('game.html', message=msg)
         else:
-            return render_template('game.html', hint=atomic_number, message="Wrong guess. Try again!")
+            return render_template('game.html', message="Wrong guess. Try again!", hint=request.form.get('hint'), answer_name=answer_name, answer_symbol=answer_symbol)
     except:
         return render_template('error.html')
 
-# Optional: Show error.html for 500 Internal Server Errors
 @app.errorhandler(500)
 def internal_error(error):
     return render_template('error.html'), 500
 
-# Optional: Show error.html for page not found
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error.html'), 404
