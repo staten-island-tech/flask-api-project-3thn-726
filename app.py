@@ -6,25 +6,25 @@ app = Flask(__name__)
 
 DATA_URL = "https://raw.githubusercontent.com/neelpatel05/periodic-table-api/refs/heads/master/data.json"
 
-def fetch_elements():
+def fetch_elements():                          #serves as a database
     response = requests.get(DATA_URL)
     return response.json()
 
 @app.route('/')
 def index():
     try:
-        elements = fetch_elements()
+        elements = fetch_elements()                                        #elements becomes the database
         return render_template('elements.html', elements=elements)
     except:
         return render_template('error.html')
 
-@app.route('/element/<int:atomic_number>')
+@app.route('/element/<int:atomic_number>')     #creates a page for each element and organizes it based on the elements periodic table
 def element_detail(atomic_number):
     try:
         elements = fetch_elements()
         for element in elements:
-            if element.get("atomicNumber") == atomic_number:
-                return render_template('element.html', element=element)
+            if element.get("atomicNumber") == atomic_number:              
+                return render_template('element.html', element=element) #references the code in element.html to create the page for the element
         return render_template('error.html')
     except:
         return render_template('error.html')
