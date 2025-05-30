@@ -20,7 +20,7 @@
             <button type="submit">Submit Guess</button>
         </form>
     {% else %}
-        <p>Start a new game from <a href="{{ url_for('start_game_web') }}">here</a>.</p>
+        <p>Start a new game <a href="{{ url_for('start_game_web') }}">here</a>.</p>
     {% endif %}
     <a href="{{ url_for('index') }}" class="back-link">← Back to all elements</a>
 </body>

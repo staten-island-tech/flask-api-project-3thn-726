@@ -41,7 +41,7 @@ def start_game_web():
 @app.route('/game/guess-web', methods=['POST'])
 def guess_element_web():
     try:
-        guess = request.form.get('guess', '').strip().lower()
+        guess = request.form.get('guess', '').strip().lower() 
         answer_name = request.form.get('answer_name', '').strip().lower()
         answer_symbol = request.form.get('answer_symbol', '').strip().lower()
 
